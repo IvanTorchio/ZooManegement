@@ -21,19 +21,28 @@ namespace TorchioZoo
 
         public virtual double CalcolaCiboDiarioKg()
         {
-            return 0;
+            return Peso / 20;
         }
         public virtual double CalcolaCostoGestioneMensile()
         {
-            return 0;
+            return 100;
         }
         public virtual string EmettiVerso()
         {
-            return "";
+            return "L'animale emette un verso";
         }
-        public void AggiornaPeso(double nuovoPeso)
+        public void AggiornaPeso(int nuovoPeso)
         {
-            
+            if (Peso >= 0)
+            {
+                Peso = nuovoPeso;
+                CalcolaVariazionePesoPercentuale();
+                DetermnaStatoSaluteAutomatico();
+            }
+            else
+            {
+                Console.WriteLine("Il peso non può essere negativo.");
+            }
         }
         public void EffettuaControlloVeterinario()
         {
@@ -41,15 +50,38 @@ namespace TorchioZoo
         }
         public virtual string MostraInformazioni()
         {
-            return "";
+            return $"Nome: {Nome}, " +
+                   $"\nSpecie: {Specie}, " +
+                   $"\nEtà: {Eta}, Peso: {Peso}, " +
+                   $"\nStato di Salute: {StatoDiSalute}, " +
+                   $"\nControlli Veterinari: {_numeroControlliVeterinari}";
         }
         private void CalcolaVariazionePesoPercentuale()
         {
-            
+            if (_pesoIniziale > 0)
+            {
+                double variazione = ((Peso - _pesoIniziale) / _pesoIniziale) * 100;
+                Console.WriteLine($"Variazione peso: {variazione}%");
+            }
         }
         private void DetermnaStatoSaluteAutomatico()
         {
-
+            if (_numeroControlliVeterinari > 3 && Peso > 0.9 * _pesoIniziale)
+            {
+                StatoDiSalute = "Ottimo";
+            }
+            else if (_numeroControlliVeterinari > 2)
+            {
+                StatoDiSalute = "Buono";
+            }
+            else if (_numeroControlliVeterinari > 1)
+            {
+                StatoDiSalute = "Discreto";
+            }
+            else
+            {
+                StatoDiSalute = "Critico";
+            }
         }
     }
 }
